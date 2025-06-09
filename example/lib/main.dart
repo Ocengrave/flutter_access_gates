@@ -59,6 +59,12 @@ final class ExampleApp extends StatelessWidget {
 final class ExamplePage extends StatelessWidget {
   const ExamplePage({super.key});
 
+  Future<bool> simulateAsyncCheck(BuildContext context, String value) async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    return value == 'allow';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -90,6 +96,13 @@ final class ExamplePage extends StatelessWidget {
         const DebugGate(
           fallback: Text('DebugGate: fallback (not debug)'),
           child: Text('DebugGate: only in debug'),
+        ),
+        AccessGate<String>(
+          input: 'allow',
+          check: simulateAsyncCheck,
+          loading: const CircularProgressIndicator(),
+          fallback: const Text('AsyncGate: access denied'),
+          child: const Text('AsyncGate: access granted after delay'),
         ),
       ],
     );

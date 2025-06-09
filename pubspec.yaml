@@ -1,8 +1,7 @@
 name: flutter_access_gates
 description: A declarative access control layer for Flutter UI. (FeatureFlags, PermissionGate and more).
-version: 0.1.0
+version: 0.2.0
 homepage: https://github.com/Ocengrave/flutter_access_gates
-license: MIT
 
 environment:
   sdk: ^3.8.0
