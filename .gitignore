@@ -1,0 +1,34 @@
+# Misc
+*.log
+*.pyc
+*.swp
+*.class
+.DS_Store
+.pub-cache/
+build/
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Coverage and analysis
+coverage/
+.analysis_options
+
+# Localization / Codegen
+*.g.dart
+
+# Pubspec lock for packages (not apps)
+/pubspec.lock
+
+# System
+.AppleDouble
+.LSOverride
+Icon?
