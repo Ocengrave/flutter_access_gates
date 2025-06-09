@@ -5,7 +5,7 @@ homepage: https://github.com/Ocengrave/flutter_access_gates
 license: MIT
 
 environment:
-  sdk: ^3.8.0
+  sdk: ">=3.4.0 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
