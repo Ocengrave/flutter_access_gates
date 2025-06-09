@@ -139,3 +139,21 @@ PermissionGate(
   child: ElevatedButton(...),
 )
 ```
+
+## 🚀 Установка
+
+Добавьте пакет в pubspec.yaml, используя ссылку на GitHub:
+
+```yaml
+dependencies:
+  flutter_access_gates:
+    git:
+      url: https://github.com/Ocengrave/flutter_access_gates.git
+```
+
+Затем выполните:
+```bash
+flutter pub get
+```
+
+### ⚠️ Пакет пока не опубликован на pub.dev. Установка доступна только через GitHub.
