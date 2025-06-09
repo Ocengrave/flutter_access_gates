@@ -1,96 +1,25 @@
-flutter_access_gates
+# Changelog
 
-Декларативный слой управления доступом для Flutter UI.
+Все значимые изменения в этом проекте будут документироваться в этом файле.
 
-Позволяет условно отображать виджеты в зависимости от:
-	•	ролей пользователя (RoleGate)
-	•	разрешений (PermissionGate)
-	•	feature-флагов (FeatureGate)
-	•	пользовательских условий (GateUiBuilder, CompositeGate)
+Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.0.0/)
+и проекте [Semantic Versioning](https://semver.org/lang/ru/).
 
-Работает по паттерну Access Strategy, поддерживает внедрение своей логики и моков для тестов.
+---
 
-🚀 Установка
+## [0.1.0] - 2025-06-09
 
-Добавьте в pubspec.yaml:
+### Добавлено
 
-dependencies:
-  flutter_access_gates:
-    git:
-      url: https://github.com/Ocengrave/flutter_access_gates.git
+- 🎯 Базовый функционал:
+  - `FeatureGate`, `RoleGate`, `PermissionGate` — для контроля доступа к UI
+  - `CompositeGate` и `GateUiBuilder` — кастомные условия и композиция
+  - `DebugGate` — для отображения компонентов только в debug-сборках
+- ⚙️ Система `AccessStrategy` и `AccessStrategyProvider` для полной масштабируемости
+- 🔌 `MultiAccessStrategy` — объединение нескольких стратегий
+- 🌐 `FeatureFlagsController` + `FeatureFlags` — управление feature-флагами через `InheritedNotifier`
+- 🧪 Покрытие unit-тестами всех компонентов (гейты, стратегии, провайдеры)
+- 🔨 Упрощённый `SimpleFeatureGate` для YAML, RemoteConfig и локальных конфигов
+- 📦 Пример использования в `example/` с фейковой стратегией
 
-✨ Пример использования
-
-FeatureGate(
-  flag: 'new_ui',
-  child: NewUIWidget(),
-  fallback: OldUIWidget(),
-)
-
-PermissionGate(
-  permission: 'edit_profile',
-  child: ElevatedButton(...),
-)
-
-CompositeAccessGate(
-  conditions: [
-    (ctx) => ctx.read<Session>().isAdmin,
-    (ctx) => DateTime.now().isBefore(DateTime(2025)),
-  ],
-  child: Banner(...),
-)
-
-🧱 Компоненты
-
-Виджет	Назначение
-RoleGate	Проверка наличия роли у пользователя
-PermissionGate	Проверка наличия права/разрешения
-FeatureGate	Проверка включённости фичи через FeatureFlags
-CompositeAccessGate	Проверка нескольких условий сразу (AND)
-GateUiBuilder	Свободная логика доступа, как builder
-DebugGate	Отображение только в debug-сборках
-
-🧠 AccessStrategy
-
-Все гейты используют стратегию доступа — реализацию интерфейса AccessStrategy, которую можно внедрить через AccessStrategyProvider.
-
-AccessStrategyProvider(
-  strategy: MyAccessStrategy(),
-  child: MyApp(),
-)
-
-Пример собственной стратегии:
-
-class FakeAccessStrategy implements AccessStrategy {
-  @override
-  bool hasPermission(BuildContext ctx, String permission) => true;
-  @override
-  bool hasRole(BuildContext ctx, String role) => role == 'admin';
-  @override
-  bool isFeatureEnabled(BuildContext ctx, String flag) => false;
-}
-
-🧪 Покрытие тестами
-
-Каждый гейт покрыт unit-тестами. Вы можете использовать FakeAccessStrategy или MockAccessStrategy для своих тестов.
-
-📦 Пример приложения
-
-cd example
-flutter run
-
-📋 To-do / Roadmap
-	•	Базовые гейты: Role, Permission, Feature
-	•	Composite и кастомный builder
-	•	Поддержка стратегии доступа через Provider
-	•	Покрытие тестами
-	•	Локализация сообщений отказа
-	•	Виджеты “если нет доступа” (например, DisabledButtonIfDenied)
-
-🧾 License
-
-MIT
-
-⸻
-
-Made with ❤️ by @Ocengrave
+---
