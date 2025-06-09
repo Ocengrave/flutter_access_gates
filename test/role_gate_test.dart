@@ -14,6 +14,8 @@ void main() {
       ),
     );
 
+    await tester.pumpAndSettle();
+
     expect(find.text('Welcome Admin'), findsOneWidget);
   });
 
@@ -26,6 +28,8 @@ void main() {
         ),
       ),
     );
+
+    await tester.pumpAndSettle();
 
     expect(find.text('Restricted Area'), findsNothing);
   });

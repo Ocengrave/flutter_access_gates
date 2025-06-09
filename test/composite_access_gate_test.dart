@@ -15,6 +15,8 @@ void main() {
         ),
       );
 
+      await tester.pumpAndSettle();
+
       expect(find.text('Visible'), findsOneWidget);
     });
 
@@ -28,6 +30,8 @@ void main() {
           ),
         ),
       );
+
+      await tester.pumpAndSettle();
 
       expect(find.text('Should Not Be Visible'), findsNothing);
       expect(find.text('Denied'), findsOneWidget);
@@ -44,6 +48,8 @@ void main() {
         ),
       );
 
+      await tester.pumpAndSettle();
+
       expect(find.text('Should Not Be Visible'), findsNothing);
       expect(find.text('Denied'), findsOneWidget);
     });
@@ -59,6 +65,8 @@ void main() {
           ),
         ),
       );
+
+      await tester.pumpAndSettle();
 
       expect(find.text('Visible by default'), findsOneWidget);
     });

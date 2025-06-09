@@ -1,44 +1,72 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
-/// [AccessGate] — абстрактный базовый класс для всех UI-контроллеров доступа.
-///
-/// Используется как основа для `PermissionGate`, `FeatureGate`, `CompositeAccessGate`, и т.п.
-///
-/// Реализует общую сигнатуру:
-/// - `buildGranted` — виджет при разрешённом доступе
-/// - `buildDenied` — виджет при отказе (по умолчанию `SizedBox.shrink()`)
+typedef AccessCheck<T> = FutureOr<bool> Function(BuildContext context, T input);
+
+/// Универсальный асинхронный AccessGate, поддерживает как sync, так и async проверки.
 ///
 /// Пример:
 /// ```dart
-/// final class MyCustomGate extends AccessGate {
-///   const MyCustomGate({required super.child});
-///
-///   @override
-///   Widget build(BuildContext context) {
-///     final access = someCondition();
-///     return access ? buildGranted(context) : buildDenied(context);
-///   }
-///
-///   @override
-///   Widget buildGranted(BuildContext context) => child;
-/// }
+/// AccessGate<String>(
+///   input: 'edit',
+///   check: (context, permission) {
+///     return AccessStrategyProvider.of(context).hasPermission(context, permission);
+///   },
+///   child: Text('Access granted'),
+///   fallback: Text('Access denied'),
+/// )
 /// ```
-@immutable
-abstract class AccessGate extends StatelessWidget {
-  /// Виджет, отображаемый при успешной проверке доступа
+class AccessGate<T> extends StatefulWidget {
+  final T input;
+  final AccessCheck<T> check;
   final Widget child;
-
-  /// Виджет, отображаемый при отказе доступа (по умолчанию `null`)
   final Widget? fallback;
+  final Widget? loading;
 
-  const AccessGate({required this.child, this.fallback, super.key});
+  const AccessGate({
+    required this.input,
+    required this.check,
+    required this.child,
+    this.fallback,
+    this.loading,
+    super.key,
+  });
 
-  /// Вызывается при успешной проверке доступа
-  @protected
-  Widget buildGranted(BuildContext context);
+  @override
+  State<AccessGate<T>> createState() => _AccessGateState<T>();
+}
 
-  /// Вызывается при отказе доступа (по умолчанию: `SizedBox.shrink()`)
-  @protected
-  Widget buildDenied(BuildContext context) =>
-      fallback ?? const SizedBox.shrink();
+final class _AccessGateState<T> extends State<AccessGate<T>> {
+  bool? granted;
+
+  void _resolveAccess() {
+    setState(() => granted = null);
+    Future.value(widget.check(context, widget.input))
+        .then((value) {
+          if (mounted) setState(() => granted = value);
+        })
+        .catchError((_) {
+          if (mounted) setState(() => granted = false);
+        });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _resolveAccess();
+  }
+
+  @override
+  void didUpdateWidget(covariant AccessGate<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.input != widget.input) {
+      _resolveAccess();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (granted == null) return widget.loading ?? const SizedBox.shrink();
+    return granted! ? widget.child : widget.fallback ?? const SizedBox.shrink();
+  }
 }

@@ -16,6 +16,8 @@ void main() {
       ),
     );
 
+    await tester.pumpAndSettle();
+
     expect(find.text('Visible'), findsOneWidget);
   });
 
@@ -30,6 +32,8 @@ void main() {
         ),
       ),
     );
+
+    await tester.pumpAndSettle();
 
     expect(find.text('Hidden'), findsNothing);
   });
