@@ -1,25 +1,141 @@
-# Changelog
+# flutter_access_gates
 
-Все значимые изменения в этом проекте будут документироваться в этом файле.
+**Declarative access control for Flutter UI.**
 
-Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.0.0/)
-и проекте [Semantic Versioning](https://semver.org/lang/ru/).
+> 🔐 Feature flags, permission-based widgets, role gates, and flexible access strategies — all in one.
+
+---
+
+## ✨ Особенности
+
+- ✅ `FeatureGate` — доступ по фиче-флагам
+- ✅ `PermissionGate` — доступ по правам
+- ✅ `RoleGate` — доступ по ролям
+- ✅ `GateUiBuilder` — настраиваемые условия
+- ✅ `CompositeAccessGate` — объединение условий
+- ✅ `DebugGate` — доступ только в debug-сборке
+- ✅ `SimpleFeatureGate` — минималистичная замена без стратегии
+- ✅ Полная поддержка `AccessStrategy` (можно подключать свои стратегии)
+- ✅ Горячая перезагрузка
 
 ---
 
-## [0.1.0] - 2025-06-09
+## 🚀 Пример использования
 
-### Добавлено
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_access_gates/flutter_access_gates.dart';
 
-- 🎯 Базовый функционал:
-  - `FeatureGate`, `RoleGate`, `PermissionGate` — для контроля доступа к UI
-  - `CompositeGate` и `GateUiBuilder` — кастомные условия и композиция
-  - `DebugGate` — для отображения компонентов только в debug-сборках
-- ⚙️ Система `AccessStrategy` и `AccessStrategyProvider` для полной масштабируемости
-- 🔌 `MultiAccessStrategy` — объединение нескольких стратегий
-- 🌐 `FeatureFlagsController` + `FeatureFlags` — управление feature-флагами через `InheritedNotifier`
-- 🧪 Покрытие unit-тестами всех компонентов (гейты, стратегии, провайдеры)
-- 🔨 Упрощённый `SimpleFeatureGate` для YAML, RemoteConfig и локальных конфигов
-- 📦 Пример использования в `example/` с фейковой стратегией
+void main() {
+  runApp(const ExampleApp());
+}
 
----
+final class FakeAccessStrategy implements AccessStrategy {
+  final Set<String> allowedPermissions;
+  final Set<String> allowedRoles;
+  final Set<String> enabledFeatures;
+
+  const FakeAccessStrategy({
+    this.allowedPermissions = const {},
+    this.allowedRoles = const {},
+    this.enabledFeatures = const {},
+  });
+
+  @override
+  bool hasPermission(BuildContext context, String permission) {
+    return allowedPermissions.contains(permission);
+  }
+
+  @override
+  bool hasRole(BuildContext context, String role) {
+    return allowedRoles.contains(role);
+  }
+
+  @override
+  bool isFeatureEnabled(BuildContext context, String flag) {
+    return enabledFeatures.contains(flag);
+  }
+}
+
+final class ExampleApp extends StatelessWidget {
+  const ExampleApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FeatureFlags(
+      controller: FeatureFlagsController({'dev_mode': true}),
+      child: AccessStrategyProvider(
+        strategy: const FakeAccessStrategy(
+          allowedRoles: {'admin'},
+          allowedPermissions: {'edit'},
+          enabledFeatures: {'dev_mode'},
+        ),
+        child: MaterialApp(
+          home: Scaffold(
+            appBar: AppBar(title: const Text('Access Gates Example')),
+            body: const ExamplePage(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+final class ExamplePage extends StatelessWidget {
+  const ExamplePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const FeatureGate(
+          flag: 'dev_mode',
+          child: Text('FeatureGate: dev_mode active'),
+        ),
+        const PermissionGate(
+          permission: 'edit',
+          child: Text('PermissionGate: edit granted'),
+        ),
+        const RoleGate(
+          role: 'admin',
+          child: Text('RoleGate: admin'),
+        ),
+        GateUiBuilder(
+          condition: (ctx) => true,
+          builder: (_) => const Text('GateUiBuilder: always shown'),
+        ),
+        CompositeAccessGate(
+          conditions: [
+            (ctx) => true,
+            (ctx) => true,
+          ],
+          child: const Text('CompositeGate: all conditions passed'),
+        ),
+        const DebugGate(
+          fallback: Text('DebugGate: fallback (not debug)'),
+          child: Text('DebugGate: only in debug'),
+        ),
+      ],
+    );
+  }
+}
+```
+
+## 🧠 Концепция
+
+Вместо ручной проверки условий доступа:
+```dart
+if (user.hasPermission('edit')) {
+  return ElevatedButton(...);
+}
+```
+
+Вы просто используете декларативный виджет:
+
+```dart
+PermissionGate(
+  permission: 'edit',
+  child: ElevatedButton(...),
+)
+```
