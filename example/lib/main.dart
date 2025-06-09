@@ -61,6 +61,7 @@ final class ExamplePage extends StatelessWidget {
 
   Future<bool> simulateAsyncCheck(BuildContext context, String value) async {
     await Future.delayed(const Duration(seconds: 1));
+
     return value == 'allow';
   }
 
@@ -96,8 +97,6 @@ final class ExamplePage extends StatelessWidget {
           fallback: Text('DebugGate: fallback (not debug)'),
           child: Text('DebugGate: only in debug'),
         ),
-
-        /// 💡 Новый асинхронный гейт:
         AccessGate<String>(
           input: 'allow',
           check: simulateAsyncCheck,
