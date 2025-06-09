@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'access_gate.dart';
 
-/// [CompositeGate] — универсальный контроллер доступа, объединяющий несколько условий.
+import '../flutter_access_gates.dart';
+
+/// [CompositeAccessGate] — универсальный контроллер доступа, объединяющий несколько условий.
 ///
-/// Принимает список функций-проверок (от `BuildContext`), и если **все** возвращают `true`,
-/// то отображается `child`, иначе — `buildDenied`.
+/// Показывает [child], если **все** функции-проверки возвращают `true`.
 ///
 /// Пример:
 /// ```dart
-/// CompositeGate(
+/// CompositeAccessGate(
 ///   conditions: [
 ///     (ctx) => ctx.read<Session>().hasRole('logist'),
 ///     (ctx) => ctx.read<Permissions>().has('edit_flight'),
@@ -17,23 +17,35 @@ import 'access_gate.dart';
 ///   fallback: const Text('Denied'),
 /// );
 /// ```
-final class CompositeAccessGate extends AccessGate {
+final class CompositeAccessGate extends StatelessWidget {
   final List<bool Function(BuildContext)> conditions;
+  final Widget child;
+  final Widget? fallback;
+  final Widget? loading;
 
   const CompositeAccessGate({
     required this.conditions,
-    required super.child,
-    super.fallback,
+    required this.child,
+    this.fallback,
+    this.loading,
     super.key,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    final bool isGranted = conditions.every((check) => check(context));
-
-    return isGranted == true ? buildGranted(context) : buildDenied(context);
+  static bool _checkAll(
+    BuildContext context,
+    List<bool Function(BuildContext)> checks,
+  ) {
+    return checks.every((fn) => fn(context));
   }
 
   @override
-  Widget buildGranted(BuildContext context) => child;
+  Widget build(BuildContext context) {
+    return AccessGate<List<bool Function(BuildContext)>>(
+      input: conditions,
+      check: _checkAll,
+      fallback: fallback,
+      loading: loading,
+      child: child,
+    );
+  }
 }
