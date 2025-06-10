@@ -71,4 +71,55 @@ void main() {
       expect(find.text('Visible by default'), findsOneWidget);
     });
   });
+  group('CompositeGate (async)', () {
+    testWidgets('show loading, after show child when true async-condition', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CompositeAccessGate(
+            conditions: [
+              (_) async {
+                await Future.delayed(const Duration(milliseconds: 50));
+                return true;
+              },
+            ],
+            loading: const Text('Loading...'),
+            child: const Text('Async OK'),
+          ),
+        ),
+      );
+
+      expect(find.text('Loading...'), findsOneWidget);
+      expect(find.text('Async OK'), findsNothing);
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('Async OK'), findsOneWidget);
+      expect(find.text('Loading...'), findsNothing);
+    });
+
+    testWidgets('show fallback, at list one async-condition false', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CompositeAccessGate(
+            conditions: [(_) async => true, (_) async => false],
+            loading: const Text('Loading...'),
+            fallback: const Text('Denied async'),
+            child: const Text('Should Not Appear'),
+          ),
+        ),
+      );
+
+      expect(find.text('Loading...'), findsOneWidget);
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('Denied async'), findsOneWidget);
+      expect(find.text('Should Not Appear'), findsNothing);
+      expect(find.text('Loading...'), findsNothing);
+    });
+  });
 }

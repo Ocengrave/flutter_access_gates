@@ -6,6 +6,15 @@
 и проекте [Semantic Versioning](https://semver.org/lang/ru/).
 
 ---
+## [0.2.2] - 2025-06-10
+
+### Добавлено
+- Добавлены тесты для асинхронного CompositeAccessGate
+
+### Изменено
+- CompositeAccessGate теперь может быть как sync так и async
+
+
 ## [0.2.1] - 2025-06-09
 
 ### Документация
