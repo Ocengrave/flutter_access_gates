@@ -1,6 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-import '../flutter_access_gates.dart';
+typedef AccessCondition = FutureOr<bool> Function(BuildContext);
 
 /// [CompositeAccessGate] — универсальный контроллер доступа, объединяющий несколько условий.
 ///
@@ -17,8 +19,9 @@ import '../flutter_access_gates.dart';
 ///   fallback: const Text('Denied'),
 /// );
 /// ```
+///
 final class CompositeAccessGate extends StatelessWidget {
-  final List<bool Function(BuildContext)> conditions;
+  final List<AccessCondition> conditions;
   final Widget child;
   final Widget? fallback;
   final Widget? loading;
@@ -31,21 +34,48 @@ final class CompositeAccessGate extends StatelessWidget {
     super.key,
   });
 
-  static bool _checkAll(
-    BuildContext context,
-    List<bool Function(BuildContext)> checks,
-  ) {
-    return checks.every((fn) => fn(context));
+  Future<bool> _checkAllAsync(BuildContext context) {
+    return Future.wait<bool>(
+      conditions.map((fn) => Future.value(fn(context))),
+    ).then((results) => results.every((r) => r));
   }
 
   @override
   Widget build(BuildContext context) {
-    return AccessGate<List<bool Function(BuildContext)>>(
-      input: conditions,
-      check: _checkAll,
-      fallback: fallback,
-      loading: loading,
-      child: child,
+    List<FutureOr<bool>> rawResults = <FutureOr<bool>>[];
+
+    bool hasAsync = false;
+
+    for (var fn in conditions) {
+      final FutureOr<bool> res = fn(context);
+
+      rawResults.add(res);
+
+      if (res is Future<bool>) {
+        hasAsync = true;
+      }
+    }
+
+    // Все синхронно — можно сразу отрисовать
+    if (hasAsync == false) {
+      final bool allowed = rawResults.cast<bool>().every((r) => r);
+
+      return allowed == true ? child : (fallback ?? const SizedBox.shrink());
+    }
+
+    return FutureBuilder<bool>(
+      future: _checkAllAsync(context),
+      builder: (ctx, snap) {
+        if (snap.connectionState != ConnectionState.done) {
+          return loading ?? const Center(child: CircularProgressIndicator());
+        }
+
+        if (snap.hasData == true && snap.data == true) {
+          return child;
+        }
+
+        return fallback ?? const SizedBox.shrink();
+      },
     );
   }
 }
