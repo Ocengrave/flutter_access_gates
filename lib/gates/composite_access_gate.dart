@@ -56,7 +56,6 @@ final class CompositeAccessGate extends StatelessWidget {
       }
     }
 
-    // Все синхронно — можно сразу отрисовать
     if (hasAsync == false) {
       final bool allowed = rawResults.cast<bool>().every((r) => r);
 
