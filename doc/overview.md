@@ -1,54 +1,68 @@
-# Обзор: Flutter Access Gates
+# Overview: Flutter Access Gates
+**Flutter Access Gates** is a declarative way to manage access to UI components based on feature flags, permissions, roles, or any custom condition.
 
-## Основные компоненты
+> 💡 Instead of writing `if (user.hasPermission(...))`, just use intuitive `Gate` widgets right in your widget tree.
 
-### `AccessGate<T>`
-Базовый виджет, принимающий значение и функцию проверки (sync/async). Работает с любым типом `T`.
+---
+
+## What It Solves
+
+- Want to **hide a button** from unauthorized roles?
+- Show a feature only in `debug` mode?
+- Render a block only when a feature flag is enabled?
+- Or apply your own custom logic?
+
+**Access Gates** provide ready-to-use declarative widgets for all of this.
+
+---
+
+## Core Widget: `AccessGate<T>`
 
 ```dart
 AccessGate<String>(
   input: 'admin',
   check: (ctx, role) => strategy.hasRole(ctx, role),
-  child: Text('Доступ разрешен'),
-  fallback: Text('Нет доступа'),
+  child: Text('Welcome, admin!'),
+  fallback: Text('Access denied'),
 )
 ```
 
+- `input`: the value to check (role, permission, flag, etc.)
+- `check`: the function to validate it (sync or async)
+- `child`: shown when access is granted
+- `fallback`: shown when access is denied
+- `loading`: shown while waiting for the result
 ---
 
-## Встроенные гейты
+## Built-in Gates
 
-| Название             | Назначение                                      |
-|----------------------|--------------------------------------------------|
-| `RoleGate`           | Проверка по роли                                 |
-| `PermissionGate`     | Проверка по пермишену                            |
-| `FeatureGate`        | Проверка фичи (feature-flag)                     |
-| `CompositeAccessGate`| Сложные логические условия                       |
-| `DebugGate`          | UI только в debug-сборках                        |
-| `GateUiBuilder`      | Синхронный builder с условием                    |
+| Widget                  | Purpose                                  |
+|-------------------------|------------------------------------------|
+| `RoleGate`              | Role-based access                        |
+| `PermissionGate`        | Permission-based access                  |
+| `FeatureGate`           | Feature flag checking                    |
+| `CompositeAccessGate`   | Combine multiple conditions (`AND`)      |
+| `DebugGate`             | Render only in debug builds              |
+| `GateUiBuilder`         | Custom sync condition                    |
+| `SimpleFeatureGate`     | Flag-only version without a strategy     |
 
 ---
 
-## Асинхронная поддержка
-
-Все гейты работают и с `bool`, и с `Future<bool>` стратегиями.
+## Async Checks — Done Right
 
 ```dart
 AccessGate<String>(
   input: 'edit',
   check: (ctx, permission) async => await api.hasPermission(permission),
   loading: CircularProgressIndicator(),
-  fallback: Text('Доступ запрещен'),
-  child: Text('Разрешено'),
+  fallback: Text('Access denied'),
+  child: Text('Edit access granted'),
 )
 ```
 
 ---
 
 ## AccessStrategy
-
-Интерфейс, реализующий бизнес-логику:
-
 ```dart
 abstract class AccessStrategy {
   bool hasRole(BuildContext context, String role);
@@ -57,7 +71,7 @@ abstract class AccessStrategy {
 }
 ```
 
-Пример подключения:
+You can implement and plug in your own strategy:
 
 ```dart
 AccessStrategyProvider(
@@ -66,13 +80,25 @@ AccessStrategyProvider(
 )
 ```
 
----
-
-## Рекомендации
-
-- Используйте `AccessGate<T>` напрямую для нестандартных сценариев
-- Для отладки можно сделать `DevConsoleGate`/`AccessDebugPanel`
+Or use a simple `Map<String, bool>` with `SimpleFeatureGate` if no strategy is needed.
 
 ---
 
-Документация актуальна для версии `0.2.0`
+## When to Use
+
+| Scenario                        | Use                                 |
+|---------------------------------|--------------------------------------|
+| Show "Delete" button            | `PermissionGate(permission: 'delete')` |
+| Show dev feature                | `FeatureGate(flag: 'dev_console')`  |
+| Hide UI in release mode         | `DebugGate(child: ...)`             |
+| Custom logic via JWT/context    | `AccessGate<T>` with custom `check` |
+| Combine multiple conditions     | `CompositeAccessGate([...])`        |
+
+---
+
+## Recommendations
+
+- For async checks, always specify a `loading` widget
+
+---
+## This documentation corresponds to version `0.2.3`

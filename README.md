@@ -6,6 +6,7 @@
 
 ---
 
+<<<<<<< Updated upstream
 ## ✨ Особенности
 
 - ✅ `FeatureGate` — доступ по фиче-флагам
@@ -21,6 +22,21 @@
 ---
 
 ## 🚀 Пример использования
+=======
+## ✨ Opportunities
+
+| Gates                | Purpose                       |
+|----------------------|----------------------------------|
+| `FeatureGate`        | By future flags                  |
+| `PermissionGate`     | By permission rules              |
+| `RoleGate`           | By user roles                    |
+| `GateUiBuilder`      | By custom condtioons             |
+| `CompositeAccessGate`| All conditions  `AND`            |
+| `DebugGate`          | Only in debug-mode               |
+| `SimpleFeatureGate`  | Only Map use                     |
+
+## Use Example
+>>>>>>> Stashed changes
 
 ```dart
 import 'package:flutter/material.dart';
@@ -122,16 +138,20 @@ final class ExamplePage extends StatelessWidget {
 }
 ```
 
+<<<<<<< Updated upstream
 ## 🧠 Концепция
+=======
+## Conceptions
+>>>>>>> Stashed changes
 
-Вместо ручной проверки условий доступа:
+Instead of manual access conditions check: 
 ```dart
 if (user.hasPermission('edit')) {
   return ElevatedButton(...);
 }
 ```
 
-Вы просто используете декларативный виджет:
+Simply using declarative widget:
 
 ```dart
 PermissionGate(
@@ -140,16 +160,20 @@ PermissionGate(
 )
 ```
 
+<<<<<<< Updated upstream
 ## 🚀 Установка
+=======
+## Install
+>>>>>>> Stashed changes
 
-Добавьте пакет в pubspec.yaml, используя ссылку на GitHub:
+Add pakage in pubspec.yaml:
 
 ```yaml
 dependencies:
   flutter_access_gates: ^0.2.2
 ```
 
-Затем выполните:
+Then execute:
 ```bash
 flutter pub get
 ```
