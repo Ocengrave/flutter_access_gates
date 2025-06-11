@@ -146,9 +146,7 @@ PermissionGate(
 
 ```yaml
 dependencies:
-  flutter_access_gates:
-    git:
-      url: https://github.com/Ocengrave/flutter_access_gates.git
+  flutter_access_gates: ^0.2.2
 ```
 
 Затем выполните:
