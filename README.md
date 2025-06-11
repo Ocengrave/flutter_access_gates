@@ -6,19 +6,19 @@
 
 ---
 
-## ✨ Возможности
+## ✨ Opportunities
 
-| Гейт                 | Назначение                       |
+| Gates                | Purpose                       |
 |----------------------|----------------------------------|
-| `FeatureGate`        | По фиче-флагам                   |
-| `PermissionGate`     | По правам доступа                |
-| `RoleGate`           | По ролям пользователя            |
-| `GateUiBuilder`      | По кастомным условиям            |
-| `CompositeAccessGate`| Все условия `AND`                |
-| `DebugGate`          | Только в debug-сборке            |
-| `SimpleFeatureGate`  | Без стратегии, только Map        |
+| `FeatureGate`        | By future flags                  |
+| `PermissionGate`     | By permission rules              |
+| `RoleGate`           | By user roles                    |
+| `GateUiBuilder`      | By custom condtioons             |
+| `CompositeAccessGate`| All conditions  `AND`            |
+| `DebugGate`          | Only in debug-mode               |
+| `SimpleFeatureGate`  | Only Map use                     |
 
-## Пример использования
+## Use Example
 
 ```dart
 import 'package:flutter/material.dart';
@@ -120,16 +120,16 @@ final class ExamplePage extends StatelessWidget {
 }
 ```
 
-## Концепция
+## Conceptions
 
-Вместо ручной проверки условий доступа:
+Instead of manual access conditions check: 
 ```dart
 if (user.hasPermission('edit')) {
   return ElevatedButton(...);
 }
 ```
 
-Вы просто используете декларативный виджет:
+Simply using declarative widget:
 
 ```dart
 PermissionGate(
@@ -138,16 +138,16 @@ PermissionGate(
 )
 ```
 
-## Установка
+## Install
 
-Добавьте пакет в pubspec.yaml, используя ссылку на GitHub:
+Add pakage in pubspec.yaml:
 
 ```yaml
 dependencies:
   flutter_access_gates: ^0.2.2
 ```
 
-Затем выполните:
+Then execute:
 ```bash
 flutter pub get
 ```
