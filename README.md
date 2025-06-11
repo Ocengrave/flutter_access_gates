@@ -6,23 +6,6 @@
 
 ---
 
-<<<<<<< Updated upstream
-## ✨ Особенности
-
-- ✅ `FeatureGate` — доступ по фиче-флагам
-- ✅ `PermissionGate` — доступ по правам
-- ✅ `RoleGate` — доступ по ролям
-- ✅ `GateUiBuilder` — настраиваемые условия
-- ✅ `CompositeAccessGate` — объединение условий
-- ✅ `DebugGate` — доступ только в debug-сборке
-- ✅ `SimpleFeatureGate` — минималистичная замена без стратегии
-- ✅ Полная поддержка `AccessStrategy` (можно подключать свои стратегии)
-- ✅ Горячая перезагрузка
-
----
-
-## 🚀 Пример использования
-=======
 ## ✨ Opportunities
 
 | Gates                | Purpose                       |
@@ -36,7 +19,6 @@
 | `SimpleFeatureGate`  | Only Map use                     |
 
 ## Use Example
->>>>>>> Stashed changes
 
 ```dart
 import 'package:flutter/material.dart';
@@ -138,11 +120,7 @@ final class ExamplePage extends StatelessWidget {
 }
 ```
 
-<<<<<<< Updated upstream
-## 🧠 Концепция
-=======
 ## Conceptions
->>>>>>> Stashed changes
 
 Instead of manual access conditions check: 
 ```dart
@@ -160,11 +138,7 @@ PermissionGate(
 )
 ```
 
-<<<<<<< Updated upstream
-## 🚀 Установка
-=======
 ## Install
->>>>>>> Stashed changes
 
 Add pakage in pubspec.yaml:
 
@@ -177,5 +151,3 @@ Then execute:
 ```bash
 flutter pub get
 ```
-
-### ⚠️ Пакет пока не опубликован на pub.dev. Установка доступна только через GitHub.
