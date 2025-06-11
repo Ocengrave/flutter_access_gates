@@ -7,6 +7,16 @@ and follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.2.4] - 2025-06-11
+
+### Changed
+- Updated `README.md` with English version
+- Updated `overview.md` with bilingual (RU/EN) documentation
+- Improved recommendations and usage examples
+
+### Fixed
+- Minor formatting issues in documentation tables
+
 ## [0.2.3] - 2025-06-11
 
 ### Added
