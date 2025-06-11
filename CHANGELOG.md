@@ -1,59 +1,60 @@
 # Changelog
 
-Все значимые изменения в этом проекте будут документироваться в этом файле.
+All notable changes to this project will be documented in this file.
 
-Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.0.0/)
-и проекте [Semantic Versioning](https://semver.org/lang/ru/).
-
----
-## [0.2.3] - 2025-06-1
-
-### Добавлено
-- Публикация на pub.dev
-
-### Изменено
-- docs перенесены в папку doc
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+and follows [Semantic Versioning](https://semver.org/).
 
 ---
+
+## [0.2.3] - 2025-06-11
+
+### Added
+- Initial publish to pub.dev
+
+### Changed
+- Documentation moved to `doc/` directory
+
+---
+
 ## [0.2.2] - 2025-06-10
 
-### Добавлено
-- Добавлены тесты для асинхронного CompositeAccessGate
+### Added
+- Tests for async `CompositeAccessGate`
 
-### Изменено
-- CompositeAccessGate теперь может быть как sync так и async
+### Changed
+- `CompositeAccessGate` now supports both sync and async strategies
 
+---
 
 ## [0.2.1] - 2025-06-09
 
-### Документация
-- Добавлена подробная документация (`docs/overview.md`)
-- Обновлены примеры, рекомендации, структура каталогов
+### Documentation
+- Detailed guide added in `docs/overview.md`
+- Updated examples and structure
+
+---
 
 ## [0.2.0] - 2025-06-09
 
-### Добавлено
-- Поддержка асинхронных проверок доступа:
-    - AccessGate<T> теперь принимает FutureOr<bool> Function(...) — можно использовать async-функции
-	- Гейты (FeatureGate, PermissionGate, RoleGate, CompositeAccessGate) теперь работают как с синхронными, так и с асинхронными стратегиями
+### Added
+- Async access strategy support for all gates
+- `AccessGate<T>` now accepts `FutureOr<bool>` check
 
-### Улучшено
-- Обновлены unit-тесты
+### Improved
+- Extended unit tests for core logic
 
+---
 
 ## [0.1.0] - 2025-06-09
 
-### Добавлено
-
-- Базовый функционал:
-  - `FeatureGate`, `RoleGate`, `PermissionGate` — для контроля доступа к UI
-  - `CompositeAccessGate` и `GateUiBuilder` — кастомные условия и композиция
-  - `DebugGate` — для отображения компонентов только в debug-сборках
-- `AccessStrategy` и `AccessStrategyProvider` для полной масштабируемости
-- `MultiAccessStrategy` — объединение нескольких стратегий
-- `FeatureFlagsController` + `FeatureFlags` — управление feature-флагами через `InheritedNotifier`
-- Покрытие unit-тестами всех компонентов (гейты, стратегии, провайдеры)
-- Упрощённый `SimpleFeatureGate` для быстрого прототипирования
-- Пример использования в `example/` с фейковой стратегией
-
----
+### Added
+- Base gates: `FeatureGate`, `RoleGate`, `PermissionGate`
+- Composition: `CompositeAccessGate`, `GateUiBuilder`
+- `DebugGate` for debug-only components
+- `AccessStrategy`, `AccessStrategyProvider` for flexibility
+- `MultiAccessStrategy` for combining strategies
+- `FeatureFlagsController`, `FeatureFlags` for managing feature flags
+- Lightweight `SimpleFeatureGate`
+- Example usage in `example/`
+- Full unit test coverage
