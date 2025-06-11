@@ -1,6 +1,6 @@
 name: flutter_access_gates
 description: A declarative access control layer for Flutter UI. Includes FeatureGate, PermissionGate, and support for hot-reloadable flags.
-version: 0.2.3
+version: 0.2.4
 homepage: https://github.com/Ocengrave/flutter_access_gates
 repository: https://github.com/Ocengrave/flutter_access_gates
 documentation: https://github.com/Ocengrave/flutter_access_gates#readme
