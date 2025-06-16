@@ -1,61 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_access_gates_example/infrastructure/auth_session_provider.dart';
-import 'package:provider/provider.dart';
-import 'fake_strategy_example.dart';
-import 'provider_example.dart';
+import 'package:flutter_access_gates/flutter_access_gates.dart';
+import 'package:flutter_access_gates_example/domain/feature_flags_enum.dart';
+import 'launcher_app.dart';
 
 void main() {
-  runApp(const LauncherApp());
+  final controller = FeatureFlagsController({
+    AppFeature.darkMode.name: false,
+    AppFeature.betaScreen.name: false,
+    AppFeature.enableChat.name: true,
+  });
+
+  runApp(MyApp(controller: controller));
 }
 
-class LauncherApp extends StatelessWidget {
-  const LauncherApp({super.key});
+class MyApp extends StatelessWidget {
+  final FeatureFlagsController controller;
+  const MyApp({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Access Gates Examples',
-      home: LauncherHomePage(),
-    );
-  }
-}
+    return FeatureFlags(
+      controller: controller,
+      child: Builder(
+        builder: (context) {
+          final flags = FeatureFlags.of(context);
+          final isDark = flags.isEnabled(AppFeature.darkMode.name);
 
-class LauncherHomePage extends StatelessWidget {
-  const LauncherHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('🔐 Access Gates — Examples')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          ListTile(
-            title: const Text('FakeStrategy Example'),
-            subtitle: const Text('Hard implementation'),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const FakeStrategyExampleApp(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            title: const Text('Provider Example'),
-            subtitle: const Text('Stateful session with ChangeNotifier'),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => ChangeNotifierProvider(
-                    create: (_) => AuthSessionProvider(),
-                    child: const ProviderExampleApp(),
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
+          return MaterialApp(
+            title: 'Access Gates Examples',
+            theme: ThemeData.light(),
+            darkTheme: ThemeData.dark(),
+            themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+            home: const LauncherHomePage(),
+          );
+        },
       ),
     );
   }
