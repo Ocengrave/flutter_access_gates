@@ -151,3 +151,17 @@ Then execute:
 ```bash
 flutter pub get
 ```
+
+## Documentation
+
+- [Overview and Getting Started (EN)](doc/overview.ru.md)
+- [Обзор и Начало работы (RU)](doc/overview.md)
+- [CompositeAccessGate overview (EN)](doc/composite_access_gate.md)
+- [Обзор CompositeAccessGate (RU)](doc/composite_access_gate.ru.md)
+- [AccessContext overview (EN)](doc/access_context.md)
+- [Обзор AccessContext (RU)](doc/access_context.ru.md)
+
+---
+
+### Tip
+You can explore more practical examples inside the [`example/`](example/) folder.

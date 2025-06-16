@@ -7,6 +7,32 @@ and follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.2.5] - 2025-06-16
+
+### Added
+- **CompositeAccessGate Enhancements**:
+  - `CompositeVariant` support: `all`, `any`, `none`, `atLeast`
+  - Named constructors: `.any`, `.none`, `.atLeast` (backward-compatible)
+  - `onAllow`, `onDeny`, and `onError` callbacks
+  - `builder` mode for fine-grained rendering
+  - `debug` flag for logging condition evaluation
+  - Full widget tests for sync/async + edge cases
+
+- **AccessContext System (Experimental)**:
+  - Introduced `AccessContext<R, P, F>` interface for DI-agnostic, type-safe access logic
+  - Added `AccessContextProvider` for injecting access logic via `InheritedWidget`
+  - New `ContextAccessGate` widget: supports `allow` function, fallback, async conditions, and builder-mode rendering
+  - Complete examples and documentation in `/doc/access_context_*.md` (EN + RU)
+  - Designed to support Riverpod, BLoC, and non-Flutter platforms
+
+### Changed
+- `CompositeAccessGate` internally refactored to improve maintainability
+- Better code comments, inline DartDoc and debug readability
+- Updated `README.md` and linked new docs for quick access
+
+### Note
+`AccessContext` is **non-breaking** and fully optional. Existing gates and BuildContext-based usage continue to work without changes. You can gradually adopt the new pattern if needed.
+
 ## [0.2.4] - 2025-06-11
 
 ### Changed
