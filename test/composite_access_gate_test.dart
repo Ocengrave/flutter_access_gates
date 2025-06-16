@@ -121,5 +121,90 @@ void main() {
       expect(find.text('Should Not Appear'), findsNothing);
       expect(find.text('Loading...'), findsNothing);
     });
+
+    testWidgets('any variant works if at least one is true', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CompositeAccessGate.any(
+            conditions: [(_) => false, (_) => true],
+            fallback: const Text('Fallback'),
+            child: const Text('ANY success'),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('ANY success'), findsOneWidget);
+    });
+
+    testWidgets('none variant hides if any true', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CompositeAccessGate.none(
+            conditions: [(_) => false, (_) => true],
+            fallback: const Text('NONE passed'),
+            child: const Text('Should not see'),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('NONE passed'), findsOneWidget);
+    });
+
+    testWidgets('atLeast variant passes if threshold met', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CompositeAccessGate.atLeast(
+            atLeastCount: 2,
+            conditions: [(_) => true, (_) => true, (_) => false],
+            fallback: const Text('Not enough'),
+            child: const Text('At least passed'),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('At least passed'), findsOneWidget);
+    });
+
+    testWidgets('calls builder with correct value', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CompositeAccessGate.builder(
+            conditions: [(_) => true, (_) => false],
+            builder: (ctx, allowed) => Text(allowed ? 'Allowed' : 'Denied'),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('Denied'), findsOneWidget);
+    });
+
+    testWidgets('calls onAllow / onDeny callbacks', (tester) async {
+      bool allowedCalled = false;
+      bool deniedCalled = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CompositeAccessGate.any(
+            conditions: [(_) => true],
+            child: const Text('Visible'),
+            onAllow: () => allowedCalled = true,
+            onDeny: () => deniedCalled = true,
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(allowedCalled, isTrue);
+      expect(deniedCalled, isFalse);
+    });
   });
 }

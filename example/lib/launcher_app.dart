@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_access_gates/adapters/access_context_provider.dart';
+import 'package:flutter_access_gates_example/access_context_example.dart';
 import 'package:flutter_access_gates_example/infrastructure/auth_session_provider.dart';
 import 'package:provider/provider.dart';
+import 'domain/dummy_session_context.dart';
 import 'enum_feature_example.dart';
 import 'provider_example.dart';
 
@@ -34,6 +37,20 @@ class LauncherHomePage extends StatelessWidget {
                   builder: (_) => ChangeNotifierProvider(
                     create: (_) => AuthSessionProvider(),
                     child: const ProviderExamplePage(),
+                  ),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('AccessContext Example'),
+            subtitle: const Text('Using AccessContext interface and gates'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => AccessContextProvider(
+                    context: DummySessionContext(),
+                    child: const AccessContextExamplePage(),
                   ),
                 ),
               );
