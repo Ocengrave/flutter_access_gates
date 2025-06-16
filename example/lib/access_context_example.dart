@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_access_gates/adapters/access_context_provider.dart';
 import 'package:flutter_access_gates/gates/context_access_gate.dart';
-import 'package:flutter_access_gates_example/domain/dummy_session_context.dart';
 
 final class AccessContextExamplePage extends StatelessWidget {
   const AccessContextExamplePage({super.key});
