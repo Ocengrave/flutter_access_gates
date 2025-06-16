@@ -1,110 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_access_gates/flutter_access_gates.dart';
+import 'package:flutter_access_gates_example/domain/feature_flags_enum.dart';
+import 'launcher_app.dart';
 
 void main() {
-  runApp(const ExampleApp());
-}
-
-final class FakeAccessStrategy implements AccessStrategy {
-  final Set<String> allowedPermissions;
-  final Set<String> allowedRoles;
-  final Set<String> enabledFeatures;
-
-  const FakeAccessStrategy({
-    this.allowedPermissions = const {},
-    this.allowedRoles = const {},
-    this.enabledFeatures = const {},
+  final controller = FeatureFlagsController({
+    AppFeature.darkMode.name: false,
+    AppFeature.betaScreen.name: false,
+    AppFeature.enableChat.name: true,
   });
 
-  @override
-  bool hasPermission(BuildContext context, String permission) {
-    return allowedPermissions.contains(permission);
-  }
-
-  @override
-  bool hasRole(BuildContext context, String role) {
-    return allowedRoles.contains(role);
-  }
-
-  @override
-  bool isFeatureEnabled(BuildContext context, String flag) {
-    return enabledFeatures.contains(flag);
-  }
+  runApp(MyApp(controller: controller));
 }
 
-final class ExampleApp extends StatelessWidget {
-  const ExampleApp({super.key});
+class MyApp extends StatelessWidget {
+  final FeatureFlagsController controller;
+  const MyApp({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return FeatureFlags(
-      controller: FeatureFlagsController({'dev_mode': true}),
-      child: AccessStrategyProvider(
-        strategy: const FakeAccessStrategy(
-          allowedRoles: {'admin'},
-          allowedPermissions: {'edit'},
-          enabledFeatures: {'dev_mode'},
-        ),
-        child: MaterialApp(
-          home: Scaffold(
-            appBar: AppBar(title: const Text('Access Gates Example')),
-            body: const ExamplePage(),
-          ),
-        ),
+      controller: controller,
+      child: Builder(
+        builder: (context) {
+          final flags = FeatureFlags.of(context);
+          final isDark = flags.isEnabled(AppFeature.darkMode.name);
+
+          return MaterialApp(
+            title: 'Access Gates Examples',
+            theme: ThemeData.light(),
+            darkTheme: ThemeData.dark(),
+            themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+            home: const LauncherHomePage(),
+          );
+        },
       ),
-    );
-  }
-}
-
-final class ExamplePage extends StatelessWidget {
-  const ExamplePage({super.key});
-
-  Future<bool> simulateAsyncCheck(BuildContext context, String value) async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    return value == 'allow';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const FeatureGate(
-          flag: 'dev_mode',
-          child: Text('FeatureGate: dev_mode active'),
-        ),
-        const PermissionGate(
-          permission: 'edit',
-          child: Text('PermissionGate: edit granted'),
-        ),
-        const RoleGate(
-          role: 'admin',
-          child: Text('RoleGate: admin'),
-        ),
-        GateUiBuilder(
-          condition: (ctx) => true,
-          builder: (_) => const Text('GateUiBuilder: always shown'),
-        ),
-        CompositeAccessGate(
-          conditions: [
-            (ctx) => true,
-            (ctx) => true,
-          ],
-          child: const Text('CompositeGate: all conditions passed'),
-        ),
-        const DebugGate(
-          fallback: Text('DebugGate: fallback (not debug)'),
-          child: Text('DebugGate: only in debug'),
-        ),
-        AccessGate<String>(
-          input: 'allow',
-          check: simulateAsyncCheck,
-          loading: const CircularProgressIndicator(),
-          fallback: const Text('AsyncGate: access denied'),
-          child: const Text('AsyncGate: access granted after delay'),
-        ),
-      ],
     );
   }
 }
